@@ -15,8 +15,8 @@ nubLoop([], L) -> L;
 nubLoop([X | Xs], L) ->
     IsInList = isInList(X, L),
     case IsInList of
-      true -> nubLoop(Xs, L);
-      false -> nubLoop(Xs, L ++ [X])
+        true -> nubLoop(Xs, L);
+        false -> nubLoop(Xs, L ++ [X])
     end.
 
 nub(Xs) -> nubLoop(Xs, []).
@@ -34,17 +34,20 @@ get_file_contents(Name) ->
 
 get_all_lines(File, Partial) ->
     case io:get_line(File, "") of
-      eof -> file:close(File), Partial;
-      Line ->
-	  {Strip, _} = lists:split(length(Line) - 1, Line),
-	  get_all_lines(File, [Strip | Partial])
+        eof ->
+            file:close(File),
+            Partial;
+        Line ->
+            {Strip, _} = lists:split(length(Line) - 1, Line),
+            get_all_lines(File, [Strip | Partial])
     end.
 
 % Show the contents of a list of strings.
 % Can be used to check the results of calling get_file_contents.
 
 show_file_contents([L | Ls]) ->
-    io:format("~s~n", [L]), show_file_contents(Ls);
+    io:format("~s~n", [L]),
+    show_file_contents(Ls);
 show_file_contents([]) -> ok.
 
 nospaces([]) -> [];
@@ -55,21 +58,21 @@ nospaces([X | Xs]) -> [X | nospaces(Xs)].
 nopunct([]) -> [];
 nopunct([X | Xs]) ->
     case lists:member(X, "\"-\\.,';:\t\n") of
-      true -> nopunct(Xs);
-      false -> [X | nopunct(Xs)]
+        true -> nopunct(Xs);
+        false -> [X | nopunct(Xs)]
     end.
 
 lines(A, [], 0, 0, I, X) -> X;
 lines(A, [], S, 0, I, X) -> X ++ [{S, I - 1}];
 lines(A, [Line | T], 0, 0, I, X) ->
     case lists:member(A, Line) of
-      true -> lines(A, T, I, 0, I + 1, X);
-      false -> lines(A, T, 0, 0, I + 1, X)
+        true -> lines(A, T, I, 0, I + 1, X);
+        false -> lines(A, T, 0, 0, I + 1, X)
     end;
 lines(A, [Line | T], S, 0, I, X) ->
     case lists:member(A, Line) of
-      true -> lines(A, T, S, 0, I + 1, X);
-      false -> lines(A, T, 0, 0, I + 1, X ++ [{S, I - 1}])
+        true -> lines(A, T, S, 0, I + 1, X);
+        false -> lines(A, T, 0, 0, I + 1, X ++ [{S, I - 1}])
     end.
 
 lines(A, Words) -> {A, lines(A, Words, 0, 0, 1, [])}.
@@ -77,9 +80,9 @@ lines(A, Words) -> {A, lines(A, Words, 0, 0, 1, [])}.
 indexing() ->
     Content = get_file_contents("gettysburg-address.txt"),
     Words = lists:map(fun (A) ->
-			      string:split(nopunct(A), " ", all)
-		      end,
-		      Content),
+                              string:split(nopunct(A), " ", all)
+                      end,
+                      Content),
     NWords = lists:map(fun (A) -> nospaces(A) end, Words),
     UWords = nub(lists:flatmap(fun (A) -> A end, NWords)),
     lists:map(fun (A) -> lines(A, Words) end, UWords).
