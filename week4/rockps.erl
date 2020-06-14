@@ -1,4 +1,4 @@
--module(rockpc).
+-module(rockps).
 
 % rock paper scissor
 -export([tournament/2]).

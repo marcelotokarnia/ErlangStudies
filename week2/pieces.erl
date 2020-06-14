@@ -2,8 +2,12 @@
 
 -export([pieces2D/1, pieces/2, piecesTest/0]).
 
+% In how many pieces can you cut a 2D area with N cuts ? 
+
 pieces2D(0) -> 1;
 pieces2D(N) when N > 0 -> N + pieces2D(N - 1).
+
+% In how many pieces can you cut a 3D volume with N cuts ? 
 
 % N cuts
 % Reference: http://www.jlmartin.faculty.ku.edu/MiniCollege2012/handout.pdf
